@@ -33,7 +33,7 @@ class LeafNode(HTMLNode):
                     props: dict = None):
         
         super().__init__(tag=tag, value=value, props=props)
-    
+
     def __repr__(self):
         return super().__repr__().replace("HTMLNode", "LeafNode")
 

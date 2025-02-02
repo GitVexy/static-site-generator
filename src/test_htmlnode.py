@@ -36,28 +36,36 @@ class TestHTMLNode(unittest.TestCase):
     def test_htmlnode_has_repr(self):
         test = HTMLNode()
         test2 = HTMLNode()
-        node = HTMLNode(tag="p", value="Hello world", children=[test, test2], props={"href": "https://www.google.com", "target": "_blank"})
+        node = HTMLNode(tag="p", vaue="Hello world", children=[test, test2], props={"href": "https://www.google.com", "target": "_blank"})
         self.assertTrue(node.__repr__().__contains__("HTMLNode"),
                         "Node __repr__ output does not contain 'HTMLNode'")
 
 class TestLeafNode(unittest.TestCase):
+    def generate_node(self):
+        node = LeafNode(tag="p",
+                        value="Hello world",
+                        props={
+                            "href": "https://www.google.com",
+                            "target": "_blank"})
+        return node
+
     def test_leafnode_has_tag(self):
-        node = LeafNode(tag="p", value="Hello world", props={"href": "https://www.google.com", "target": "_blank"})
+        node = self.generate_node()
         self.assertIsNotNone(node.tag,
                              "node.tag is NoneType")
-    
+
     def test_leafnode_has_value(self):
-        node = LeafNode(tag="p", value="Hello world", props={"href": "https://www.google.com", "target": "_blank"})
+        node = self.generate_node()
         self.assertIsNotNone(node.value,
                              "node.value is NoneType")
-    
+
     def test_leafnode_has_props(self):
-        node = LeafNode(tag="p", value="Hello world", props={"href": "https://www.google.com", "target": "_blank"})
+        node = self.generate_node()
         self.assertIsNotNone(node.props,
                              "node.props is NoneType")
     
     def test_leafnode_has_repr(self):
-        node = LeafNode(tag="p", value="Hello world", props={"href": "https://www.google.com", "target": "_blank"})
+        node = self.generate_node()
         self.assertTrue(node.__repr__().__contains__("LeafNode"),
                         "Node __repr__ output does not contain 'LeafNode'")
     

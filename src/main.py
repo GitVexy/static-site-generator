@@ -32,4 +32,23 @@ def text_node_to_html_node(text_node):
         case _:
             raise ValueError(f"Unsupported TextType: {text_node.text_type}")
 
-main()
+def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type):
+    new_nodes = []
+    for node in old_nodes:
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+    print(old_nodes)
+    print(new_nodes)
+
+nodes = [
+    TextNode("Text with `code` in there",    TextType.TEXT),
+    TextNode("Bold",    TextType.BOLD),
+    TextNode("Italic",  TextType.ITALIC),
+    TextNode("Code",    TextType.CODE),
+    TextNode("Link",    TextType.LINK),
+    TextNode("Image",   TextType.IMAGE)
+    ]
+
+split_nodes_delimiter(nodes, '`', TextType.CODE)
+
+#main()

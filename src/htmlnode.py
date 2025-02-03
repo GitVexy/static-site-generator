@@ -26,6 +26,44 @@ class HTMLNode():
         output = " " + output.rstrip(" ")
         return output
 
+class ParentNode(HTMLNode):
+    def __init__(self, 
+                    tag: str,
+                    children: list,
+                    props: dict = None
+                            ):
+        super().__init__(tag=tag, children=children, props=props)
+    
+    def __repr__(self):
+        return super().__repr__().replace("HTMLNode", "ParentNode")
+    
+    def __eq__(self, other):
+        if not isinstance(other, ParentNode):
+            return False
+        return (
+            self.tag == other.tag and
+            self.props == other.props and
+            self.children == other.children)
+    
+    def to_html(self):
+        if not self.tag:
+            raise ValueError(f"Missing values in {self}. Expecting tag, children, props")
+        if not self.children:
+            raise ValueError(f"Missing values in {self}. Expecting tag, children, props")
+        
+        output = f"<{self.tag}"
+        
+        if self.props:
+            output += f"{self.props_to_html()}>"
+        else:
+            output += ">"
+        
+        for child in self.children:
+            output += child.to_html()
+        output += f"</{self.tag}>"
+        
+        return output
+
 class LeafNode(HTMLNode):
     def __init__(self,
                     tag: str,
@@ -33,13 +71,13 @@ class LeafNode(HTMLNode):
                     props: dict = None):
         
         super().__init__(tag=tag, value=value, props=props)
-
+    
     def __repr__(self):
         return super().__repr__().replace("HTMLNode", "LeafNode")
-
+    
     def to_html(self):
-        if not self.value:
-            raise ValueError(f"Node missing value. Value is {self.value}")
+        if not type(self.value) is str:
+            raise ValueError(f"Node missing value. Expecting populated string")
         if not self.tag:
             return self.value
         props = ""
@@ -52,6 +90,10 @@ class LeafNode(HTMLNode):
 
 
 """Tests
+child1 = LeafNode("p", "Hello there")
+child2 = LeafNode("p", "Hello again")
+parent = ParentNode(tag="h1", children=[child1, child2], props={"boot": "dev"})
+print(parent.to_html())
 test = LeafNode("a",
                 "Hello 2",
                 {   "href": "https://www.google.com/",

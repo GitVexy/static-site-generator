@@ -2,9 +2,10 @@ import unittest
 
 from htmlnode import *
 from textnode import *
+from main import text_node_to_html_node
 
 def log(function_name):
-    print(f"{function_name}: OK")
+    print(f"{function_name}")
 
 class TestHTMLNode(unittest.TestCase):
     def run(self, result=None):
@@ -73,9 +74,48 @@ class TestTextNode(unittest.TestCase):
         log(self._testMethodName)
     
     def setUp(self):
-        self.node =  TextNode("This is a text node",        TextType.NORMAL, "https://www.boot.dev/") # Original
-        self.node2 = TextNode("This is a text node",        TextType.NORMAL, "https://www.boot.dev/") # Same
-        self.node3 = TextNode("This is another text node",  TextType.NORMAL)                      # Different
+        self.node =  TextNode("This is a text node",        TextType.TEXT, "https://www.boot.dev/") # Original
+        self.node2 = TextNode("This is a text node",        TextType.TEXT, "https://www.boot.dev/") # Same
+        self.node3 = TextNode("This is another text node",  TextType.TEXT)                          # Different
+        self.text = TextNode("text" , TextType.TEXT, "boot.dev")
+        self.bold   = TextNode("bold"   , TextType.BOLD, "boot.dev")
+        self.italic = TextNode("italic" , TextType.ITALIC, "boot.dev")
+        self.code   = TextNode("code"   , TextType.CODE, "boot.dev")
+        self.link   = TextNode("link"   , TextType.LINK, "boot.dev")
+        self.image  = TextNode("image"  , TextType.IMAGE, "boot.dev")
+        self.html_strings = {
+            "text":     "text",
+            "bold":     "<b>bold</b>",
+            "italic":   "<i>italic</i>",
+            "code":     "<code>code</code>",
+            "link":     "<a href=boot.dev>link</a>",
+            "image":    "<img src=boot.dev alt=image></img>"
+        }
+    
+    def test_text_node_to_html_text(self):
+        text = text_node_to_html_node(self.text)
+        self.assertEqual(text.to_html(), self.html_strings["text"])
+
+    def test_text_node_to_html_bold(self):
+        bold = text_node_to_html_node(self.bold)
+        self.assertEqual(bold.to_html(), self.html_strings["bold"])
+
+    def test_text_node_to_html_italic(self):
+        italic = text_node_to_html_node(self.italic)
+        self.assertEqual(italic.to_html(), self.html_strings["italic"])
+
+    def test_text_node_to_html_code(self):
+        code = text_node_to_html_node(self.code)
+        self.assertEqual(code.to_html(), self.html_strings["code"])
+
+    def test_text_node_to_html_link(self):
+        link = text_node_to_html_node(self.link)
+        self.assertEqual(link.to_html(), self.html_strings["link"])
+
+    def test_text_node_to_html_image(self):
+        image = text_node_to_html_node(self.image)
+        self.assertEqual(image.to_html(), self.html_strings["image"])
+
     
     def test_text_node_equal(self):
         self.assertEqual(self.node, self.node2)
@@ -95,5 +135,39 @@ class TestTextNode(unittest.TestCase):
     def test_text_node_type_url_none(self):
         self.assertIsInstance(self.node3.url, type(None))
 
+class TestParentNode(unittest.TestCase):
+    def run(self, result=None):
+        super().run(result)
+        log(self._testMethodName)
+    
+    def setUp(self):
+        self.child1 = LeafNode(tag="a", value="Child 1", props={"href": "https://www.boot.dev/"})
+        self.child2 = LeafNode(tag="p", value="Child 2")
+        self.node  = ParentNode(tag="h1", children=[self.child1, self.child2], props={"boot": "dev"})
+        self.node2 = ParentNode(tag="h1", children=[self.child1, self.child2], props={"boot": "dev"})
+        self.node3 = ParentNode(tag="h1", children=[self.node, self.child2], props={"boot": "dev"}) # Nested parents
+    
+    def test_parent_node_nested_parents(self):
+        self.assertIsInstance(self.node3.to_html(), str)
+    
+    def test_parent_node_equal(self):
+        self.assertEqual(self.node, self.node2)
+    
+    def test_parent_node_not_equal(self):
+        self.assertNotEqual(self.node, self.node3)
+    
+    def test_parent_node_has_tag(self):
+        self.assertIsNotNone(self.node.tag)
+    
+    def test_parent_node_has_children(self):
+        self.assertIsNotNone(self.node.children)
+    
+    def test_parent_node_has_props(self):
+        self.assertIsNotNone(self.node.props)
+    
+    def test_parent_node_has_repr(self):
+        self.assertTrue(self.node.__repr__().__contains__("ParentNode"))
+
 if __name__ == "__main__":
     unittest.main()
+

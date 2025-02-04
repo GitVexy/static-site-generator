@@ -179,7 +179,7 @@ class TestFunctions(unittest.TestCase):
         self.bold_multiword  = TextNode("This is text with a **bolded word** and **another**", TextType.TEXT)
         self.italic          = TextNode("This is text with an *italic* word"                 , TextType.TEXT)
         self.bold_and_italic = TextNode("**bold** and *italic*"                              , TextType.TEXT)
-        self.code            = TextNode("This is text with a `code block` word"              , TextType.TEXT)
+        self.code            = TextNode("This is text with a code `block` word"              , TextType.TEXT)
     
     def test_delim_bold(self):
         new_nodes = split_nodes_delimiter([self.bold], "**", TextType.BOLD)

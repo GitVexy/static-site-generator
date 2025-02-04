@@ -37,7 +37,7 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: TextType) 
         sections: list = node.text.split(delimiter)
         
         if len(sections) % 2 == 0:
-            raise ValueError("invalid markdown, formatted section not closed")
+            raise ValueError(f"Invalid markdown. Missing closing delimiter\nValue: {node.text}")
         
         for i in range(len(sections)):
             if not sections[i]:

@@ -1,6 +1,5 @@
 from htmlnode import *
 from textnode import *
-import re as regex
 
 def text_node_to_html_node(text_node):
     match text_node.text_type:
@@ -34,24 +33,22 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: TextType) 
             new_nodes.append(node)
             continue
         
-        else:
-            sectioned_nodes = []
-            sections: list = node.text.split(delimiter)
-            
-            if len(sections) % 2 == 0:
-                raise ValueError("invalid markdown, formatted section not closed")
-            
-            for i in range(len(sections)):
-                if not sections[i]:
-                    continue
-                
-                if i % 2 == 0:
-                    sectioned_nodes.append(TextNode(sections[i], TextType.TEXT))
-                
-                else:
-                    sectioned_nodes.append(TextNode(sections[i], text_type))
-            
-            new_nodes.extend(sectioned_nodes)
+        sectioned_nodes = []
+        sections: list = node.text.split(delimiter)
         
-        return new_nodes
-
+        if len(sections) % 2 == 0:
+            raise ValueError("invalid markdown, formatted section not closed")
+        
+        for i in range(len(sections)):
+            if not sections[i]:
+                continue
+            
+            if i % 2 == 0:
+                sectioned_nodes.append(TextNode(sections[i], TextType.TEXT))
+            
+            else:
+                sectioned_nodes.append(TextNode(sections[i], text_type))
+        
+        new_nodes.extend(sectioned_nodes)
+    
+    return new_nodes

@@ -174,12 +174,16 @@ class TestFunctions(unittest.TestCase):
         log(self._testMethodName)
     
     def setUp(self):
-        self.bold            = TextNode("This is text with a **bolded** word"                , TextType.TEXT)
-        self.bold_double     = TextNode("This is text with a **bolded** word and **another**", TextType.TEXT)
-        self.bold_multiword  = TextNode("This is text with a **bolded word** and **another**", TextType.TEXT)
-        self.italic          = TextNode("This is text with an *italic* word"                 , TextType.TEXT)
-        self.bold_and_italic = TextNode("**bold** and *italic*"                              , TextType.TEXT)
-        self.code            = TextNode("This is text with a code `block` word"              , TextType.TEXT)
+        self.bold            = TextNode("This is text with a **bolded** word"                 , TextType.TEXT)
+        self.bold_double     = TextNode("This is text with a **bolded** word and **another**" , TextType.TEXT)
+        self.bold_multiword  = TextNode("This is text with a **bolded word** and **another**" , TextType.TEXT)
+        self.italic          = TextNode("This is text with an *italic* word"                  , TextType.TEXT)
+        self.bold_and_italic = TextNode("**bold** and *italic*"                               , TextType.TEXT)
+        self.code            = TextNode("This is text with a `code block` word"               , TextType.TEXT)
+        self.img             = TextNode("This is text with an ![image](IMAGINE)"              , TextType.TEXT)
+        self.imgs            = TextNode("![image](IMAGINE) and ![image2](damn)"               , TextType.TEXT)
+        self.link            = TextNode("This is text with a [link](boot.dev)"                , TextType.TEXT)
+        self.links           = TextNode("[link](boot.dev) and ![nlink](boot.dev)"             , TextType.TEXT)
     
     def test_delim_bold(self):
         new_nodes = split_nodes_delimiter([self.bold], "**", TextType.BOLD)
@@ -248,6 +252,34 @@ class TestFunctions(unittest.TestCase):
                 TextNode(" word", TextType.TEXT),
             ],
             new_nodes,
+        )
+
+    def test_extract_img(self):
+        img = extract_markdown_images(self.img.text)
+        self.assertListEqual(
+            [('image', 'IMAGINE')],
+            img
+        )
+
+    def test_extract_link(self):
+        link = extract_markdown_links(self.link.text)
+        self.assertListEqual(
+            [('link', 'boot.dev')],
+            link
+        )
+
+    def test_extract_img_multi(self):
+        imgs = extract_markdown_images(self.imgs.text)
+        self.assertListEqual(
+            [('image', 'IMAGINE'), ('image2', 'damn')],
+            imgs
+        )
+
+    def test_extract_link_multi(self):
+        links = extract_markdown_links(self.links.text)
+        self.assertListEqual(
+            [('link', 'boot.dev')],
+            links
         )
 
 if __name__ == "__main__":

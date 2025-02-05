@@ -1,5 +1,6 @@
 from htmlnode import *
 from textnode import *
+import re as regex
 
 def text_node_to_html_node(text_node):
     match text_node.text_type:
@@ -52,3 +53,19 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: TextType) 
         new_nodes.extend(sectioned_nodes)
     
     return new_nodes
+
+def extract_markdown_images(text: str) -> list[tuple]:
+    return regex.findall(r"!\[(.*?)\]\((.*?)\)", text)
+
+def extract_markdown_links(text: str) -> list[tuple]:
+    return regex.findall(r"(?<!!)\[(.*?)\]\((.*?)\)", text)
+
+""" Regex shenannigans
+image = "This is text with an image ![look at me](https://i.imgur.com/aKaOqIh.gif)"
+print(extract_markdown_images(image))
+# Outputs: [('look at me', 'https://i.imgur.com/aKaOqIh.gif')]
+
+link = "This is text with a link [click me](https://i.imgur.com/aKaOqIh.gif)"
+print(extract_markdown_links(link))
+# Outputs: [('click me', 'https://i.imgur.com/aKaOqIh.gif')] 
+"""

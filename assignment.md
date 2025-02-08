@@ -38,3 +38,4 @@ How We're Gonna Build It
 We're not going to build the program in the same order that it runs... that's often not the best way to build large projects. Instead, we'll tackle individual problems that we know we'll need to solve and use unit tests to make sure they work as expected. We'll put the pieces together into a working program as we get close to the end.
 
 You don't need to memorize the information on this page, but come back to review it if you ever feel lost in the details. 
+

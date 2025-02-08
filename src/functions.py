@@ -51,7 +51,6 @@ def split_nodes_delimiter(old_nodes: list, delimiter: str, text_type: TextType) 
                 sectioned_nodes.append(TextNode(sections[i], text_type))
         
         new_nodes.extend(sectioned_nodes)
-    
     return new_nodes
 
 def extract_markdown_images(text: str) -> list[tuple]:
@@ -116,11 +115,13 @@ def split_nodes_link(old_nodes: list[TextNode]):
         
         for link in links:
             sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
+            
             if len(sections) != 2:
                 raise ValueError("invalid markdown, link section not closed")
+            
             if sections[0] != "":
                 new_nodes.append(TextNode(sections[0], TextType.TEXT))
-                
+            
             new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
             original_text = sections[1]
         
@@ -129,17 +130,43 @@ def split_nodes_link(old_nodes: list[TextNode]):
         
     return new_nodes
 
-link_node = TextNode("[links](link1) like [this](link2) right here", TextType.TEXT,)
-node = TextNode("Raw text node", TextType.TEXT)
-image_node = TextNode("These are two ![images](image1) like ![this](image2)", TextType.TEXT,)
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+    delimiters = [
+        ("**", TextType.BOLD),
+        ("*", TextType.ITALIC),
+        ("`", TextType.CODE)
+        ]
+    
+    for delimiter in delimiters:
+        nodes = split_nodes_delimiter(nodes, delimiter[0], delimiter[1])
+    
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_link(nodes)
+    
+    return nodes
+
+def markdown_to_blocks(markdown: str) -> list[str]:
+    blocks = markdown.split("\n\n")
+    output_blocks = []
+    
+    for block in blocks:
+        stripped_block = block.strip()
+        if stripped_block:
+            output_blocks.append(stripped_block)
+    
+    return output_blocks
+
+markdown_string = (
+"""# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item
 
 
+* This is difficult""")
 
-#Regex shenannigans
-#image = "This is text with an image ![look at me](https://i.imgur.com/aKaOqIh.gif)"
-#print(extract_markdown_images(image))
-## Outputs: [('look at me', 'https://i.imgur.com/aKaOqIh.gif')]
-#
-#link = "This is text with a link [click me](https://i.imgur.com/aKaOqIh.gif)"
-#print(extract_markdown_links(link))
-## Outputs: [('click me', 'https://i.imgur.com/aKaOqIh.gif')] 
+print(markdown_to_blocks(markdown_string))

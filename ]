@@ -1,0 +1,219 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# don't put duplicate lines or lines starting with space in the history.
+# See bash(1) for more options
+HISTCONTROL=ignoreboth
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# If set, the pattern "**" used in a pathname expansion context will
+# match all files and zero or more directories and subdirectories.
+#shopt -s globstar
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+# Added bash functions file for extended functionality and modularity
+
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+if [ -e $HOME/.bash_functions ]; then
+    source $HOME/.bash_functions
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# Generated for envman. Do not edit.
+[ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
+export PATH=$PATH:$HOME/.local/opt/go/bin
+
+# Temporary for boot.dev
+export PATH="$PATH:/home/vexy/development/worldbanc/private/bin"
+
+## Window color variables
+BLACK="38;5;240"
+RED="38;5;167"
+GREEN="38;5;35"
+YELLOW="38;5;173"
+BLUE="38;5;32"
+PINK="38;5;161"
+CYAN="38;5;73"
+WHITE="38;5;168"
+
+## Window colors
+# Color definitions for different file types and attributes:
+# di: directories
+# ln: symbolic links
+# ex: executables
+# bd: block devices
+# cd: character devices
+# pi: named pipes (FIFOs)
+# so: sockets
+# su: setuid files
+# sg: setgid files
+# st: sticky files
+# fi: regular files
+LS_COLORS="\
+\
+di=${YELLOW}:\
+ln=${CYAN}:\
+ex=${WHITE}:\
+bd=${MAGENTA}:\
+cd=${BLUE}:\
+pi=${GREEN}:\
+so=${RED}:\
+su=${YELLOW}:\
+sg=${CYAN}:\
+st=${MAGENTA}:\
+fi=${WHITE}:\
+\
+*.tar=${PINK}:*.zip=${YELLOW}:\
+*.gz=${RED}:*.tar.gz=${RED}:*.bz2=${RED}:\
+*.xz=${RED}:*.7z=${RED}:*.rar=${RED}:\
+*.jpg=${PINK}:*.jpeg=${PINK}:*.png=${PINK}:\
+*.mp3=${YELLOW}:*.flac=${YELLOW}:*.mp4=${BLUE}:\
+*.avi=${BLUE}:*.mkv=${BLUE}:*.pdf=${PINK}:\
+*.doc=${GREEN}:*.docx=${GREEN}:*.ppt=${GREEN}:\
+*.pptx=${GREEN}:*.xls=${GREEN}:*.xlsx=${GREEN}:*.log=${RED}:\
+*.md=${GREEN}:*txt=${GREEN}"
+
+export LS_COLORS
+
+# Color configuration for terminal
+## Text colors
+BLACK="\e[38;5;240m"
+RED="\e[38;5;167m"
+GREEN="\e[38;5;35m"
+YELLOW="\e[38;5;173m"
+BLUE="\e[38;5;32m"
+PINK="\e[38;5;161m"
+CYAN="\e[38;5;73m"
+WHITE="\e[38;5;168m"
+RESET="${WHITE}"
+
+# echo -ne "\e]11;#140b0d\a"  # Dark purple
+echo -ne "\e]11;#10030600\a"  # Black background
+
+function display_colors () {
+    echo -e "${BLACK}This is black${RESET}"
+    echo -e "${RED}This is red${RESET}"
+    echo -e "${GREEN}This is green${RESET}"
+    echo -e "${YELLOW}This is yellow${RESET}"
+    echo -e "${BLUE}This is blue${RESET}"
+    echo -e "${PINK}This is pink${RESET}"
+    echo -e "${CYAN}This is cyan${RESET}"
+    echo -e "${WHITE}This is white${RESET}"
+}
+
+## Function to customize the prompt
+
+# Determine active Python virtualenv details.
+function set_virtualenv () {
+  if test -z "$VIRTUAL_ENV" ; then
+      PYTHON_VIRTUALENV=""
+  else
+      PYTHON_VIRTUALENV="${CYAN}[`basename \"$VIRTUAL_ENV\"`]${COLOR_NONE} "
+  fi
+}
+
+# Finally, set the prompt
+function set_prompt {
+    local current_dir=$(pwd)
+    local parent_dir=$(dirname "$current_dir")
+    set_virtualenv
+
+    # Check if we're at root or close to root
+    if [ "$current_dir" = "/" ]; then
+        export PS1="${PYTHON_VIRTUALENV}\[${PINK}\]\u \[${RED}\]root/\[${CYAN}\] ~ \[${RESET}\]"
+    elif [ "$parent_dir" = "/" ]; then
+        # For one level deep
+        export PS1="${PYTHON_VIRTUALENV}\[${PINK}\]\u: \[${RED}\]root/\[${YELLOW}\]$(basename "$current_dir")/\[${CYAN}\] ~ \[${RESET}\]"
+    else
+        # For all other cases
+        export PS1="${PYTHON_VIRTUALENV}\[${PINK}\]\u: \[${WHITE}\]../$(basename "$parent_dir")/\[${YELLOW}\]\W/\[${CYAN}\] ~ \[${RESET}\]"
+    fi
+}
+
+## Set the prompt dynamically before each command
+PROMPT_COMMAND=set_prompt
+
+## Prompt configuration
+# export PS1="${PINK}\u: ${WHITE}../\$(basename \$(dirname \$(pwd)))/${YELLOW}\W/${CYAN}~ "
+
+
+[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path bash)"
+
+
+# Run on launch
+l

@@ -175,6 +175,136 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 
     return output_blocks
 
-# TODO:
+
+def block_to_block_type(markdown: str) -> str:
+    split_lines = markdown.split("\n")
+    # print(f"split_lines: {split_lines}")
+    line_lens = []
+    for line in split_lines:
+        line_lens.append(len(line))
+    line_lens = sorted(line_lens)
+    # print(f"line_lens: {line_lens}")
+    shortest_line_len = line_lens[0]
+    # print(f"shortest_line_len: {shortest_line_len}")
+
+    # ORDERED LIST
+    if (shortest_line_len >= 3
+            and split_lines[0][:3] == "1. "):
+        o_list_check = True
+        for i in range(1, len(split_lines)):
+            if split_lines[i][:3] != f"{i + 1}. ":
+                o_list_check = False
+        if o_list_check:
+            return "ordered_list"
+
+    # UNORDERED LIST
+    if (shortest_line_len >= 2
+            and (split_lines[0][:2] == "* "
+                 or split_lines[0][:2] == "- ")):
+        u_list_check = True
+        for line in split_lines:
+            if (line[:2] == "* " or
+                    line[:2] == "- "):
+                continue
+            else:
+                u_list_check = False
+        if u_list_check:
+            return "unordered_list"
+
+    # QUOTE
+    if (shortest_line_len >= 1
+            and split_lines[0][0] == ">"):
+        q_list_check = True
+        for line in split_lines:
+            if line[0] == ">":
+                continue
+            else:
+                q_list_check = False
+        if q_list_check:
+            return "quote"
+
+    # CODE
+    if (shortest_line_len >= 6
+            and len(markdown) >= 4
+            and "```" == markdown[:3]
+            and "```" == markdown[-3:]):
+        return "code"
+
+    # HEADING
+    if (shortest_line_len >= 3
+            and markdown[0] == "#"):
+        for i in range(1, len(markdown) + 1):
+            if (markdown[i] == "#"
+                    and i <= 5):
+                continue
+            elif (markdown[i] == "#"
+                    and i > 5):
+                break
+            elif (markdown[i] == " "
+                  and len(markdown) >= i + 1):
+                return "heading"
+
+    # PARAGRAPH
+    return "paragraph"
+
+
+# paragraph = "This is just normal text in a paragraph\nNothing special about it"
+# heading = "# BIG TITLE"
+# code = "```return to_sender\nmore_core```"
+# quote = ">quotes\n> and dat\n> fam"
+# u_list = "* Testing\n- One two three\n* Everything alright"
+# o_list = "1. Test\n2. Test\n3. Meme"
 #
-# Do the fucking assigments
+# print(block_to_block_type(paragraph))
+# print(block_to_block_type(heading))
+# print(block_to_block_type(code))
+# print(block_to_block_type(quote))
+# print(block_to_block_type(u_list))
+# print(block_to_block_type(o_list))
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#

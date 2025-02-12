@@ -1,4 +1,4 @@
-from htmlnode import LeafNode
+from htmlnode import LeafNode, HTMLNode
 from textnode import TextType, TextNode
 import re as regex
 
@@ -51,7 +51,8 @@ def split_nodes_delimiter(old_nodes: list,
 
         if len(sections) % 2 == 0:
             raise ValueError(
-                f"Invalid markdown. Missing closing delimiter\nValue: {node.text}")
+                "Invalid markdown. Missing closing delimiter"
+                f"\nValue: {node.text}")
 
         for i in range(len(sections)):
             if not sections[i]:
@@ -179,6 +180,7 @@ def markdown_to_blocks(markdown: str) -> list[str]:
 def block_to_block_type(markdown: str) -> str:
     split_lines = markdown.split("\n")
     # print(f"split_lines: {split_lines}")
+    # print(markdown)
     line_lens = []
     for line in split_lines:
         line_lens.append(len(line))
@@ -224,7 +226,7 @@ def block_to_block_type(markdown: str) -> str:
             return "quote"
 
     # CODE
-    if (shortest_line_len >= 6
+    if (shortest_line_len >= 3
             and len(markdown) >= 4
             and "```" == markdown[:3]
             and "```" == markdown[-3:]):
@@ -247,64 +249,11 @@ def block_to_block_type(markdown: str) -> str:
     # PARAGRAPH
     return "paragraph"
 
+# I AM FULLY FUCKING LOST AND I DON'T UNDERSTAND HOW TO DO THIS
 
-# paragraph = "This is just normal text in a paragraph\nNothing special about it"
-# heading = "# BIG TITLE"
-# code = "```return to_sender\nmore_core```"
-# quote = ">quotes\n> and dat\n> fam"
-# u_list = "* Testing\n- One two three\n* Everything alright"
-# o_list = "1. Test\n2. Test\n3. Meme"
-#
-# print(block_to_block_type(paragraph))
-# print(block_to_block_type(heading))
-# print(block_to_block_type(code))
-# print(block_to_block_type(quote))
-# print(block_to_block_type(u_list))
-# print(block_to_block_type(o_list))
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
+
+def markdown_to_html_node(markdown: str) -> HTMLNode:
+    blocks = markdown_to_blocks(markdown)
+    block_types = {}
+    for block in blocks:
+        HTMLNode()

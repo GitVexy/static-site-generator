@@ -10,7 +10,8 @@ from functions import (
     split_nodes_image,
     split_nodes_link,
     text_to_textnodes,
-    markdown_to_blocks)
+    markdown_to_blocks,
+    block_to_block_type)
 
 
 def log(function_name):
@@ -422,15 +423,40 @@ This is a paragraph of text. It has some **bold** and *italic* words.
         blocks = markdown_to_blocks(markdown_string)
         self.assertListEqual(
             [
-            '# This is a heading',
-            'This is a paragraph of text. It has some **bold** '
-            'and *italic* words.',
-            '* This is the first list item in a list block\n'
-            '* This is a list item\n'
-            '* This is another list item',
-            '* This is difficult'
+                '# This is a heading',
+                'This is a paragraph of text. It has some **bold** '
+                'and *italic* words.',
+                '* This is the first list item in a list block\n'
+                '* This is a list item\n'
+                '* This is another list item',
+                '* This is difficult'
             ], blocks
         )
+
+    def test_block_to_block_type(self):
+        tests = [
+            "This is a paragraph.\nNothing special",
+            "## This is a heading",
+            "```\nThis is code\n```",
+            ">This is a quote",
+            "* This\n- is an unordered\n* list",
+            "1. This\n2. is an ordered\n3. list",
+            "```\n1. This is chaos\n# and will be\n* a paragraph"
+        ]
+        results = []
+        expected_result = [
+            "paragraph",
+            "heading",
+            "code",
+            "quote",
+            "unordered_list",
+            "ordered_list",
+            "paragraph"
+        ]
+        for test in tests:
+            results.append(block_to_block_type(test))
+            print(f"{test} = {block_to_block_type(test)}")
+        self.assertEqual(results, expected_result)
 
 
 if __name__ == "__main__":
